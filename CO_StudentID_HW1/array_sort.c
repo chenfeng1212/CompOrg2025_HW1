@@ -43,7 +43,22 @@ int main(int argc, char *argv[])
         for (int j = 0; j < arr_size - i - 1; j++) {
             asm volatile(
                 // Your code
-                "");
+                "slli t0, %[j], 2\n\t"
+		"add t0, %[p_a], t0\n\t"
+		
+		"lw t1, 0(t0)\n\t"
+		"lw t2, 4(t0)\n\t"
+		
+		"ble t1, t2, 1f\n\t"
+
+		"sw t2, 0(t0)\n\t"
+		"sw t1, 4(t0)\n\t"
+
+		"1:\n\t"
+		:
+		:[p_a] "r" (p_a), [j] "r"(j)
+		:"t0", "t1", "t2", "memory"
+		);
         }
     }
     p_a = &arr[0];

@@ -6,7 +6,30 @@ int arraySearch(int *p_a, int arr_size, int target)
 
     asm volatile(
         // Your code
-        "");
+        "li t2, 0\n\t"
+	"1:\n\t"
+	
+	"bge t2, %[size], 2f\n\t"
+
+	"slli t0, t2, 2\n\t"
+	"add t0, %[p_a], t0\n\t"
+
+	"lw t1, 0(t0)\n\t"
+	
+	"bne t1, %[target], 3f\n\t"
+	"mv %[res], t2\n\t"
+	"j 2f\n\t"
+	
+	"3:\n\t"
+	"addi t2, t2, 1\n\t"
+	"j 1b\n\t"
+
+	"2:\n\t"
+
+	: [res] "=r" (result)
+	: [p_a] "r" (p_a), [target] "r" (target), [size] "r" (arr_size)
+	:"t0", "t1", "t2", "memory"
+	);
 
     return result;
 }

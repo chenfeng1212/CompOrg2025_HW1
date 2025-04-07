@@ -9,11 +9,42 @@ typedef struct Node {
 // Split the linked list into two parts
 void splitList(Node *head, Node **firstHalf, Node **secondHalf)
 {
+    Node *fh = NULL, *sh = NULL;
     asm volatile(
         /*
         Block A (splitList), which splits the linked list into two halves
         */
-        "");
+        "mv t0, %[head]\n\t"
+		"mv t1, %[head]\n\t"
+		"beqz t0, 3f\n\t"
+		"beqz t1, 3f\n\t"
+		"ld t3, 8(t1)\n\t"
+		"beqz t3, 3f\n\t"
+		
+		"1:\n\t"
+		"lw t2, 4(t1)\n\t"
+		"beqz t2, 2f\n\t"
+		"ld t2, 8(t2)\n\t"
+		"beqz t2, 2f\n\t"
+
+		"ld t0, 8(t0)\n\t"
+		"ld t1, 8(t1)\n\t"
+		"ld t1, 8(t1)\n\t"
+		"j 1b\n\t"
+
+		"2:\n\t"
+		"ld t2, 8(t0)\n\t"
+		"sd zero, 8(t0)\n\t"
+		"mv %[fh], %[head]\n\t"
+		"mv %[fh], t2\n\t"
+
+		"3:\n\t"
+		: [fh] "=r" (fh), [sh] "=r" (sh)
+		: [head] "r" (head)
+		: "t0", "t1", "t2", "t3",  "memory"
+	);
+    *firstHalf = fh;
+    *secondHalf = sh;
 }
 
 // Merge two sorted linked lists
@@ -26,7 +57,57 @@ Node *mergeSortedLists(Node *a, Node *b)
         /*
         Block B (mergeSortedList), which merges two sorted lists into one
         */
-        "");
+        "mv %[res], zero\n\t"
+		"mv %[tail], zero\n\t"
+		
+		"1:\n\t"
+		"beqz %[a], 3f\n\t"
+		"beqz %[b], 3f\n\t"
+
+		"lw t0, 0(%[a])\n\t"
+		"lw t1, 0(%[b])\n\t"
+
+		"ble t0, t1, 5f\n\t"
+
+		"mv t2, %[b]\n\t"
+		"ld t3, 8(%[b])\n\t"
+		"mv %[b], t3\n\t"
+		"j 6f\n\t"
+
+		"5:\n\t"
+		"mv t2, %[a]\n\t"
+		"ld t3, 8(%[a])\n\t"
+		"mv %[a], t3\n\t"
+
+		"6:\n\t"
+		"sd zero, 8(t2)\n\t"
+		"beqz %[res], 7f\n\t"
+		"sd t2, 8(%[tail])\n\t"
+		"j 8f\n\t"
+
+		"7:\n\t"
+		"mv %[res], t2\n\t"
+
+		"8:\n\t"
+		"mv %[tail], t2\n\t"
+		"j 1b\n\t"
+
+		"3:\n\t"
+		"or t4, %[a], %[b]\n\t"
+		"beqz t4, 2f\n\t"
+
+		"beqz %[res], 4f\n\t"
+		"sd t4, 8(%[tail])\n\t"
+		"j 2f\n\t"
+
+		"4:\n\t"
+		"mv %[res], t4\n\t"
+
+		"2:\n\t"
+		: [res] "=r" (result), [tail] "=r" (tail), [a] "+r" (a), [b] "+r" (b)
+		:
+		: "t0", "t1", "t2", "t3", "t4", "memory"
+	);
 
     return result;
 }
@@ -82,7 +163,11 @@ int main(int argc, char *argv[])
             Block C (Move to the next node), which updates the pointer to
             traverse the linked list
             */
-            "");
+            "ld %[next], 8(%[cur])\n\t"
+			: [next] "=r" (cur)
+			: [cur] "r" (cur)
+			: "memory" 
+	    );
     }
     printf("\n");
     return 0;
