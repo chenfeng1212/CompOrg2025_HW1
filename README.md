@@ -51,3 +51,6 @@ E94121038_HW1.zip/
 6. *6*先將t2 -> next = NULL，如果res == NULL跳往*7*，否則將t2存入tail -> next後再跳往*8*
 7. *7*是將res = t2
 8. *8*是將tail = t2，再跳往*1*
+#### 遇到問題
+一開始不知道Node的在記憶體占多少Byte，所以使用0(t0)代表t0 -> data，4(t0)代表t0 -> next  
+但最後發現next是存在offset8，所以8(t0)才是代表t0 -> next，然後在這個架構裡(RV64)lw、sw要改成ld、sd
