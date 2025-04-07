@@ -1,6 +1,6 @@
 # CompOrg2025_HW1
 
-## Directory Structure(upload)
+## Directory Structure (upload file)
 ```
 E94121038_HW1.zip/
 ├── E94121038_HW1/
@@ -9,6 +9,39 @@ E94121038_HW1.zip/
     ├── array_search.c
     ├── array_sort.c
     ├── linked_list_sort.c
+```
+
+## Directory Structure (here)
+```
+E94121038_HW1/
+    ├── README.md
+    ├── CO_StudentID_HW1
+    ├   ├── Makefile
+    ├   ├── array_search.c
+    ├   ├── array_sort.c
+    ├   ├── linked_list_sort.c
+    ├   ├── judge1.conj
+    ├   ├── judge2.conj
+    ├   ├── judge3.conj
+    ├── testcases
+        ├── expected
+        ├   ├── 1_1.out
+        ├   ├── 1_2.out
+        ├   ├── 1_3.out
+        ├   ├── 1_4.out
+        ├   ├── 2_1.out
+        ├   ├── 2_2.out
+        ├   ├── 3_1.out
+        ├   ├── 3_2.out
+        ├── input
+            ├── 1_1.txt
+            ├── 1_2.txt
+            ├── 1_3.txt
+            ├── 1_4.txt
+            ├── 2_1.txt
+            ├── 2_2.txt
+            ├── 3_1.txt
+            ├── 3_2.txt 
 ```
 
 ## Exercise 1 (array_sort)
